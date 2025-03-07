@@ -1,0 +1,50 @@
+@model IEnumerable<MyAspNetCoreApp.Models.Violation>
+
+@{
+    ViewData["Title"] = "Violation Lookup Results";
+}
+
+<h1>Violation Lookup Results</h1>
+<p>Search results for license plate: <strong>@ViewBag.LicensePlate</strong></p>
+
+@if (Model.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.ViolationId)</th>
+                <th>@Html.DisplayNameFor(model => model.ViolationDate)</th>
+                <th>@Html.DisplayNameFor(model => model.Location)</th>
+                <th>@Html.DisplayNameFor(model => model.ViolationType)</th>
+                <th>@Html.DisplayNameFor(model => model.FineAmount)</th>
+                <th>@Html.DisplayNameFor(model => model.IsPaid)</th>
+                <th>Vehicle Owner</th>
+                <th>License Plate</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.ViolationId)</td>
+                    <td>@Html.DisplayFor(modelItem => item.ViolationDate)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Location)</td>
+                    <td>@Html.DisplayFor(modelItem => item.ViolationType)</td>
+                    <td>@Html.DisplayFor(modelItem => item.FineAmount)</td>
+                    <td>@(item.IsPaid == true ? "Yes" : "No")</td>
+                    <td>@Html.DisplayFor(modelItem => item.Vehicle.OwnerName)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Vehicle.LicensePlate)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No violations found for this license plate.</p>
+}
+
+<div>
+    <a asp-action="Lookup">New Search</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

@@ -69,7 +69,10 @@ namespace MyAspNetCoreApp.Controllers
                 return NotFound();
             }
 
-            var vehicle = await _context.Vehicles.FindAsync(id);
+            // var vehicle = await _context.Vehicles.FindAsync(id);
+            var vehicle = await _context.Vehicles
+                .FromSqlRaw("SELECT * FROM Vehicles WHERE VehicleId = {0}", id)
+                .FirstOrDefaultAsync();
             if (vehicle == null)
             {
                 return NotFound();
@@ -141,6 +144,32 @@ namespace MyAspNetCoreApp.Controllers
             }
             
             return RedirectToAction(nameof(Index));
+        }
+
+        // GET: Vehicle/Lookup
+        public IActionResult Lookup()
+        {
+            return View();
+        }
+
+        // POST: Vehicle/Lookup
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Lookup(string licensePlate)
+        {
+            if (string.IsNullOrWhiteSpace(licensePlate))
+            {
+                ModelState.AddModelError("", "License plate is required");
+                return View();
+            }
+
+            var violations = await _context.Violations
+                .Include(v => v.Vehicle)
+                .Where(v => v.Vehicle.LicensePlate.Contains(licensePlate))
+                .ToListAsync();
+
+            ViewBag.LicensePlate = licensePlate;
+            return View("LookupResults", violations);
         }
 
         private bool VehicleExists(int id)
