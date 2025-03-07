@@ -12,3 +12,7 @@ dotnet add package Microsoft.EntityFrameworkCore.Tools
 # Step 3
 
 dotnet ef dbcontext scaffold "Server=localhost\SQLEXPRESS;Database=TrafficViolationDB;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=true" Microsoft.EntityFrameworkCore.SqlServer -o Models -f
+
+# Step 4 
+
+dotnet new mvccontroller -name VehicleController -namespace MyAspNetCoreApp.Controllers -output Controllers
