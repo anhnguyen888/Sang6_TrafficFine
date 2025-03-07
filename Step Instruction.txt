@@ -16,3 +16,8 @@ dotnet ef dbcontext scaffold "Server=localhost\SQLEXPRESS;Database=TrafficViolat
 # Step 4 
 
 Nhấn chuột phải vào thư mục Controllers và tạo File VehicleController rồi copy đoạn code của thầy trong file
+
+# Step 5 (hiển thi danh sách thì tạo trang có tên Index.cshtml trong thư mục Views/Vehicle/)
+
+# Step 6 
+Cập nhật menu để liên kết tới danh sách Vehicle trong File Views/Shared/_Layout.cshtml
