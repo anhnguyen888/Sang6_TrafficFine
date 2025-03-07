@@ -26,3 +26,17 @@ CREATE TABLE Violations (
     CONSTRAINT FK_Vehicle_Violation FOREIGN KEY (VehicleID) REFERENCES Vehicles(VehicleID) ON DELETE CASCADE
 );
 GO
+
+
+-- Thêm phương tiện
+INSERT INTO Vehicles (LicensePlate, OwnerName, VehicleType, RegistrationDate)
+VALUES 
+('51A-12345', 'Nguyễn Văn A', 'Ô tô', '2022-05-10'),
+('59B-67890', 'Trần Thị B', 'Xe máy', '2021-08-15');
+
+-- Thêm lỗi vi phạm
+INSERT INTO Violations (VehicleID, ViolationDate, Location, ViolationType, FineAmount, IsPaid)
+VALUES 
+(1, '2024-03-01 08:30:00', 'Ngã tư Trần Hưng Đạo', 'Vượt đèn đỏ', 500000, 0),
+(2, '2024-03-05 14:20:00', 'Cầu Sài Gòn', 'Chạy quá tốc độ', 750000, 1);
+
