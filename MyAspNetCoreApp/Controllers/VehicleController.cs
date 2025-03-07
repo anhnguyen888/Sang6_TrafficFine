@@ -69,7 +69,10 @@ namespace MyAspNetCoreApp.Controllers
                 return NotFound();
             }
 
-            var vehicle = await _context.Vehicles.FindAsync(id);
+            // var vehicle = await _context.Vehicles.FindAsync(id);
+            var vehicle = await _context.Vehicles
+                .FromSqlRaw("SELECT * FROM Vehicles WHERE VehicleId = {0}", id)
+                .FirstOrDefaultAsync();
             if (vehicle == null)
             {
                 return NotFound();
