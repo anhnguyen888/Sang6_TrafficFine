@@ -15,4 +15,4 @@ dotnet ef dbcontext scaffold "Server=localhost\SQLEXPRESS;Database=TrafficViolat
 
 # Step 4 
 
-dotnet new mvccontroller -name VehicleController -namespace MyAspNetCoreApp.Controllers -output Controllers
+Nhấn chuột phải vào thư mục Controllers và tạo File VehicleController rồi copy đoạn code của thầy trong file
