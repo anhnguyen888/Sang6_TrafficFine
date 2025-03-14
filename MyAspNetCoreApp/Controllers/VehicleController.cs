@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MyAspNetCoreApp.Models;
@@ -15,10 +16,39 @@ namespace MyAspNetCoreApp.Controllers
             _context = context;
         }
 
-        // GET: Vehicle
+        // Everyone can access this
+        public async Task<IActionResult> Lookup()
+        {
+            return View();
+        }
+
+        // Requires the user to be authenticated
+        [Authorize]
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Vehicles.ToListAsync());
+            var vehicles = await _context.Vehicles.ToListAsync();
+            return View(vehicles);
+        }
+
+        // Only managers and admins can create
+        [Authorize(Roles = "Admin,Manager")]
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,Manager")]
+        public async Task<IActionResult> Create(Vehicle vehicle)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(vehicle);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(vehicle);
         }
 
         // GET: Vehicle/Details/5
@@ -38,26 +68,6 @@ namespace MyAspNetCoreApp.Controllers
                 return NotFound();
             }
 
-            return View(vehicle);
-        }
-
-        // GET: Vehicle/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Vehicle/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("LicensePlate,OwnerName,VehicleType,RegistrationDate")] Vehicle vehicle)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(vehicle);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
             return View(vehicle);
         }
 
@@ -113,7 +123,8 @@ namespace MyAspNetCoreApp.Controllers
             return View(vehicle);
         }
 
-        // GET: Vehicle/Delete/5
+        // Only admins can delete
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -131,9 +142,9 @@ namespace MyAspNetCoreApp.Controllers
             return View(vehicle);
         }
 
-        // POST: Vehicle/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var vehicle = await _context.Vehicles.FindAsync(id);
@@ -144,12 +155,6 @@ namespace MyAspNetCoreApp.Controllers
             }
             
             return RedirectToAction(nameof(Index));
-        }
-
-        // GET: Vehicle/Lookup
-        public IActionResult Lookup()
-        {
-            return View();
         }
 
         // POST: Vehicle/Lookup

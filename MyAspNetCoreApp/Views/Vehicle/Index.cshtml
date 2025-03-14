@@ -1,29 +1,25 @@
 @model IEnumerable<MyAspNetCoreApp.Models.Vehicle>
 
 @{
-    ViewData["Title"] = "Vehicle List";
+    ViewData["Title"] = "Vehicles";
 }
 
 <h1>Vehicle List</h1>
 
 <p>
-    <a asp-action="Create" class="btn btn-primary">Create New</a>
+    @if (User.IsInRole("Admin") || User.IsInRole("Manager")) 
+    {
+        <a asp-action="Create" class="btn btn-primary">Create New</a>
+    }
 </p>
+
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.LicensePlate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.OwnerName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.VehicleType)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.RegistrationDate)
-            </th>
+            <th>License Plate</th>
+            <th>Owner Name</th>
+            <th>Vehicle Type</th>
+            <th>Registration Date</th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -45,7 +41,10 @@
             <td>
                 <a asp-action="Edit" asp-route-id="@item.VehicleId" class="btn btn-sm btn-warning">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.VehicleId" class="btn btn-sm btn-info">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.VehicleId" class="btn btn-sm btn-danger">Delete</a>
+                @if (User.IsInRole("Admin"))
+                {
+                    <a asp-action="Delete" asp-route-id="@item.VehicleId" class="btn btn-sm btn-danger">Delete</a>
+                }
             </td>
         </tr>
 }

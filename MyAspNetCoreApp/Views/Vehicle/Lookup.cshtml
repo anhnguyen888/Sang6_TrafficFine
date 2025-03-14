@@ -1,26 +1,48 @@
 @{
-    ViewData["Title"] = "Lookup Violations";
+    ViewData["Title"] = "Vehicle Lookup";
 }
 
-<h1>Lookup Traffic Violations</h1>
+<h1>Vehicle Lookup</h1>
 
 <div class="row">
     <div class="col-md-6">
-        <form asp-action="Lookup" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            
-            <div class="form-group mb-3">
-                <label for="licensePlate" class="control-label">License Plate</label>
-                <input name="licensePlate" id="licensePlate" class="form-control" />
+        <div class="card">
+            <div class="card-header">
+                <h5>Search by License Plate</h5>
             </div>
-            
-            <div class="form-group">
-                <input type="submit" value="Search" class="btn btn-primary" />
+            <div class="card-body">
+                <form id="lookupForm">
+                    <div class="form-group">
+                        <label for="licensePlate">License Plate</label>
+                        <input type="text" class="form-control" id="licensePlate" placeholder="Enter license plate">
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-3">Search</button>
+                </form>
             </div>
-        </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+<div class="mt-4" id="results" style="display:none;">
+    <h3>Results</h3>
+    <div id="resultsContent"></div>
 </div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $("#lookupForm").submit(function(e) {
+                e.preventDefault();
+                // In a real app, this would make an AJAX call to the server
+                const licensePlate = $("#licensePlate").val();
+                
+                // Simulated response - would be replaced with actual AJAX call
+                if (licensePlate) {
+                    $("#results").show();
+                    $("#resultsContent").html(`<p>This is a public lookup for license plate: <strong>${licensePlate}</strong></p>
+                                             <p>For detailed information, please log in.</p>`);
+                }
+            });
+        });
+    </script>
+}

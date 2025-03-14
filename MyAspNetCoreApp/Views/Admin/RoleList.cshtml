@@ -1,0 +1,29 @@
+@model IEnumerable<RoleViewModel>
+
+@{
+    ViewData["Title"] = "Role Management";
+}
+
+<h1>Roles List</h1>
+
+<div class="mb-3">
+    <a asp-action="Index" class="btn btn-secondary">Back to Dashboard</a>
+</div>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Role Name</th>
+            <th>Role ID</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var role in Model)
+        {
+            <tr>
+                <td>@role.Name</td>
+                <td>@role.Id</td>
+            </tr>
+        }
+    </tbody>
+</table>

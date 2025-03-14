@@ -1,0 +1,53 @@
+@model UserRolesViewModel
+
+@{
+    ViewData["Title"] = "Manage User Roles";
+}
+
+<h1>Manage Roles for @Model.UserName</h1>
+
+<div class="mb-3">
+    <a asp-action="UserList" class="btn btn-secondary">Back to Users</a>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <form method="post">
+            <input type="hidden" asp-for="UserId" />
+            <input type="hidden" asp-for="UserName" />
+            <input type="hidden" asp-for="Email" />
+            
+            <div class="card">
+                <div class="card-header">
+                    <h5>User Details</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Username:</strong> @Model.UserName</p>
+                    <p><strong>Email:</strong> @Model.Email</p>
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5>Assign Roles</h5>
+                </div>
+                <div class="card-body">
+                    @for (int i = 0; i < Model.Roles.Count; i++)
+                    {
+                        <div class="form-check mb-3">
+                            <input type="hidden" asp-for="@Model.Roles[i].RoleId" />
+                            <input type="hidden" asp-for="@Model.Roles[i].RoleName" />
+                            <input class="form-check-input" type="checkbox" asp-for="@Model.Roles[i].IsSelected" />
+                            <label class="form-check-label" asp-for="@Model.Roles[i].IsSelected">
+                                @Model.Roles[i].RoleName
+                            </label>
+                        </div>
+                    }
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-primary">Update Roles</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

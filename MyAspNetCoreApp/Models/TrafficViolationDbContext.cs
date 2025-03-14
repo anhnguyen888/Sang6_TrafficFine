@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace MyAspNetCoreApp.Models;
 
-public partial class TrafficViolationDbContext : DbContext
+public partial class TrafficViolationDbContext : IdentityDbContext<ApplicationUser>
 {
     public TrafficViolationDbContext()
     {
@@ -25,6 +27,8 @@ public partial class TrafficViolationDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder); // This is important for Identity tables
+
         modelBuilder.Entity<Vehicle>(entity =>
         {
             entity.HasKey(e => e.VehicleId).HasName("PK__Vehicles__476B54B23C011882");

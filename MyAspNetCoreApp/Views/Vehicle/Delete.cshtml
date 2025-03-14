@@ -1,0 +1,33 @@
+@model Vehicle
+
+@{
+    ViewData["Title"] = "Delete Vehicle";
+}
+
+<h1>Delete Vehicle</h1>
+
+<div class="alert alert-danger">
+    <h3>Are you sure you want to delete this vehicle?</h3>
+</div>
+
+<div>
+    <dl class="row">
+        <dt class="col-sm-3">License Plate</dt>
+        <dd class="col-sm-9">@Model.LicensePlate</dd>
+        
+        <dt class="col-sm-3">Owner Name</dt>
+        <dd class="col-sm-9">@Model.OwnerName</dd>
+        
+        <dt class="col-sm-3">Vehicle Type</dt>
+        <dd class="col-sm-9">@Model.VehicleType</dd>
+        
+        <dt class="col-sm-3">Registration Date</dt>
+        <dd class="col-sm-9">@Model.RegistrationDate.ToString("yyyy-MM-dd")</dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="VehicleId" />
+        <input type="submit" value="Delete" class="btn btn-danger" />
+        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
