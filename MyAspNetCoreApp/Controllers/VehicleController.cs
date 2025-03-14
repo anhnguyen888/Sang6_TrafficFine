@@ -1,12 +1,14 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using MyAspNetCoreApp.Models;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace MyAspNetCoreApp.Controllers
 {
+    // [Authorize]
     public class VehicleController : Controller
     {
         private readonly TrafficViolationDbContext _context;
@@ -23,7 +25,7 @@ namespace MyAspNetCoreApp.Controllers
         }
 
         // Requires the user to be authenticated
-        [Authorize]
+        
         public async Task<IActionResult> Index()
         {
             var vehicles = await _context.Vehicles.ToListAsync();
@@ -31,15 +33,16 @@ namespace MyAspNetCoreApp.Controllers
         }
 
         // Only managers and admins can create
-        [Authorize(Roles = "Admin,Manager")]
+        // [Authorize(Roles = "Admin,Manager")]
         public IActionResult Create()
         {
+            ViewBag.VehicleTypeId = new SelectList(_context.VehicleTypes, "VehicleTypeId", "Name");
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin,Manager")]
+        // [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> Create(Vehicle vehicle)
         {
             if (ModelState.IsValid)
@@ -48,6 +51,7 @@ namespace MyAspNetCoreApp.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewBag.VehicleTypeId = new SelectList(_context.VehicleTypes, "VehicleTypeId", "Name", vehicle.VehicleTypeId);
             return View(vehicle);
         }
 
@@ -79,14 +83,12 @@ namespace MyAspNetCoreApp.Controllers
                 return NotFound();
             }
 
-            // var vehicle = await _context.Vehicles.FindAsync(id);
-            var vehicle = await _context.Vehicles
-                .FromSqlRaw("SELECT * FROM Vehicles WHERE VehicleId = {0}", id)
-                .FirstOrDefaultAsync();
+            var vehicle = await _context.Vehicles.FindAsync(id);
             if (vehicle == null)
             {
                 return NotFound();
             }
+            ViewBag.VehicleTypeId = new SelectList(_context.VehicleTypes, "VehicleTypeId", "Name", vehicle.VehicleTypeId);
             return View(vehicle);
         }
 
@@ -124,7 +126,7 @@ namespace MyAspNetCoreApp.Controllers
         }
 
         // Only admins can delete
-        [Authorize(Roles = "Admin")]
+        // [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -144,7 +146,7 @@ namespace MyAspNetCoreApp.Controllers
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
+        // [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var vehicle = await _context.Vehicles.FindAsync(id);

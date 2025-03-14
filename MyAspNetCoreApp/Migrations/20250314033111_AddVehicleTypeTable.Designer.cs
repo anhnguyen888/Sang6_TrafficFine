@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyAspNetCoreApp.Models;
 
@@ -11,9 +12,11 @@ using MyAspNetCoreApp.Models;
 namespace MyAspNetCoreApp.Migrations
 {
     [DbContext(typeof(TrafficViolationDbContext))]
-    partial class TrafficViolationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250314033111_AddVehicleTypeTable")]
+    partial class AddVehicleTypeTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

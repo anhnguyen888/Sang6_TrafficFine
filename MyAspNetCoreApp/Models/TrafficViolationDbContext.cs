@@ -21,9 +21,12 @@ public partial class TrafficViolationDbContext : IdentityDbContext<ApplicationUs
 
     public virtual DbSet<Violation> Violations { get; set; }
 
+    public virtual DbSet<VehicleType> VehicleTypes { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=localhost\\SQLEXPRESS;Database=TrafficViolationDB;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=true");
+    {
+        //todo: remove this before production
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -38,7 +41,13 @@ public partial class TrafficViolationDbContext : IdentityDbContext<ApplicationUs
             entity.Property(e => e.VehicleId).HasColumnName("VehicleID");
             entity.Property(e => e.LicensePlate).HasMaxLength(20);
             entity.Property(e => e.OwnerName).HasMaxLength(100);
-            entity.Property(e => e.VehicleType).HasMaxLength(50);
+            entity.Property(e => e.VehicleTypeId).HasColumnName("VehicleTypeID");
+
+            entity.HasOne(d => d.VehicleType)
+                .WithMany(p => p.Vehicles)
+                .HasForeignKey(d => d.VehicleTypeId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .HasConstraintName("FK_Vehicle_VehicleType");
         });
 
         modelBuilder.Entity<Violation>(entity =>
@@ -56,6 +65,13 @@ public partial class TrafficViolationDbContext : IdentityDbContext<ApplicationUs
             entity.HasOne(d => d.Vehicle).WithMany(p => p.Violations)
                 .HasForeignKey(d => d.VehicleId)
                 .HasConstraintName("FK_Vehicle_Violation");
+        });
+
+        modelBuilder.Entity<VehicleType>(entity =>
+        {
+            entity.HasKey(e => e.VehicleTypeId);
+            entity.Property(e => e.Name).HasMaxLength(50).IsRequired();
+            entity.Property(e => e.Description).HasMaxLength(255);
         });
 
         OnModelCreatingPartial(modelBuilder);
